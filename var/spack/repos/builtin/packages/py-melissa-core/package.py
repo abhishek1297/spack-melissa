@@ -38,7 +38,7 @@ class PyMelissaCore(PythonPackage, CudaPackage):
     #       Base dependencies
     # ==============================
     depends_on("python@3.9:3.12", type=("build", "run"))
-    depends_on("py-setuptools@46.4:", type=("build"))
+    depends_on("py-setuptools@46.4:", type="build")
     depends_on("py-pyzmq@22.3.0:", type="run")
     depends_on("py-mpi4py@3.1.3:3", type="run")
     depends_on("py-numpy@1.21:1", type="run")
