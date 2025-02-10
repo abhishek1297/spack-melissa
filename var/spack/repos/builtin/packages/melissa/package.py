@@ -21,7 +21,8 @@ class Melissa(CMakePackage):
     depends_on("fortran", type="build")  # generated
 
     depends_on("cmake@3.15:", type="build")
-    depends_on("libzmq@4.2:4", type="run")
-    depends_on("mpi", type=("build", "run"))
     depends_on("pkgconfig", type="build")
+
+    depends_on("libzmq@4.2:4", type=("build", "run"))
     depends_on("python@3.9:3.12", type=("build", "run"))
+    depends_on("mpi", type=("build", "run"))
