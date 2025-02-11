@@ -61,7 +61,7 @@ class PyMelissaCore(PythonPackage, CudaPackage):
 
     depends_on("py-torch@1.12.1:2", type="run", when="+torch")
     depends_on("py-tensorflow@2.8.0:2", type="run", when="+tf")
-
+    
     # ==============================
     #       CUDA dependencies
     # ==============================
