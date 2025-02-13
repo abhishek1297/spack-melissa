@@ -52,15 +52,20 @@ class PyMelissaCore(PythonPackage, CudaPackage):
     # ==============================
     #       DL dependencies
     # ==============================
-    depends_on("py-tensorboard@2.10.0:2", type="run", when="+torch")
-    depends_on("py-tensorboard@2.10.0:2", type="run", when="+tf")
-    depends_on("py-matplotlib", type="run", when="+torch")
-    depends_on("py-matplotlib", type="run", when="+tf")
-    depends_on("py-pandas", type="run", when="+torch")
-    depends_on("py-pandas", type="run", when="+tf")
+    depends_on("py-tensorboard@2.10.0:2", type="run")
+    depends_on("py-matplotlib", type="run")
+    depends_on("py-pandas", type="run")
+    # when both frameworks are not being used
+    # in that case install minimal tensorflow
+    # for the purposes of using its tensorboard summarwriter
+    depends_on(
+        "py-tensorflow@2.8.0:2~cuda~mkl~mpi",
+        type="run",
+        when="~tf ~torch"
+    )
 
-    depends_on("py-torch@1.12.1:2", type="run", when="+torch")
-    depends_on("py-tensorflow@2.8.0:2", type="run", when="+tf")
+    depends_on("py-torch@1.12.1:2", type="run", when="+torch ~cuda")
+    depends_on("py-tensorflow@2.8.0:2", type="run", when="+tf ~cuda")
 
     # ==============================
     #       CUDA dependencies
