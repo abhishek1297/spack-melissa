@@ -71,7 +71,7 @@ class PyMelissaCore(PythonPackage, CudaPackage):
         "Try to disable one of them."
     )
     for arch in CudaPackage.cuda_arch_values:
-        # Support beyond ampere (A100) GPUs haven't been tested yet.
+        # Support beyond ampere (A100) GPUs hasn't been tested yet.
         if arch.isdigit() and 60 <= int(arch) <= 80:
             cuda_specs = f"+cuda cuda_arch={arch}"
             depends_on(f"nccl {cuda_specs}", when=cuda_specs)
