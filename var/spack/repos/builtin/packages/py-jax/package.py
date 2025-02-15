@@ -14,7 +14,7 @@ class PyJax(PythonPackage):
     """
 
     homepage = "https://github.com/jax-ml/jax"
-    pypi = "jax/jax-0.4.27.tar.gz"
+    pypi = "jax/jax-0.4.38.tar.gz"
 
     license("Apache-2.0")
     maintainers("adamjstewart", "jonas-eschle")

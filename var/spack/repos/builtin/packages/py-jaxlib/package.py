@@ -34,7 +34,7 @@ class PyJaxlib(PythonPackage, CudaPackage, ROCmPackage):
     """
 
     homepage = "https://github.com/jax-ml/jax"
-    url = "https://github.com/jax-ml/jax/archive/refs/tags/jax-v0.4.34.tar.gz"
+    url = "https://github.com/jax-ml/jax/archive/refs/tags/jax-v0.4.38.tar.gz"
 
     license("Apache-2.0")
     maintainers("adamjstewart", "jonas-eschle")
