@@ -59,19 +59,16 @@ class PyMelissaCore(PythonPackage, CudaPackage):
 
     # by default, install tensorflow
     depends_on("py-tensorflow@2.8.0:2 ~cuda", type="run", when="+tf ~cuda")
-    # prevent tensorflow when jax cuda is used
-    # TODO: remove in the future
-    conflicts(
-        "+tf",
-        when="^py-jaxlib+cuda",
-        msg="TensorFlow cannot be installed with JAX+CUDA due to compatibility issues. Try PyTorch variant instead."
-    )
-
     depends_on("py-torch@1.12.1:2 ~cuda", type="run", when="+torch ~cuda")
 
     # ==============================
     #       CUDA dependencies
     # ==============================
+    conflicts(
+        "+tf +torch +cuda",
+        msg="TensorFlow and PyTorch cannot both be enabled with CUDA due to compatibility issues. "
+        "Try to disable one of them."
+    )
     for arch in CudaPackage.cuda_arch_values:
         cuda_specs = f"+cuda cuda_arch={arch}"
         depends_on(f"nccl {cuda_specs}", when=cuda_specs)
