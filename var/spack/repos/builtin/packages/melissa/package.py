@@ -16,6 +16,7 @@ class Melissa(CMakePackage):
     maintainers("abhishekp1297", "viperML", "raffino")
 
     version("develop", branch="develop", preferred=True)
+    version("acdevelop", branch="active-sampling-develop")
 
     depends_on("c", type="build")  # generated
     depends_on("fortran", type="build")  # generated
