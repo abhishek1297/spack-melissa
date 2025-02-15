@@ -49,8 +49,8 @@ class PyExponax(PythonPackage, CudaPackage):
     # exists, use setuptools.
     # FIXME: Add additional dependencies if required.
     for arch in CudaPackage.cuda_arch_values:
-        cuda_specs = f"cuda_arch={arch}"
-        depends_on(f"py-jaxlib +cuda {cuda_specs}", type="run", when=f"{cuda_specs}")
+        cuda_specs = f"+cuda cuda_arch={arch}"
+        depends_on(f"py-jaxlib@0.4.13: {cuda_specs}", type="run", when=f"{cuda_specs}")
 
     depends_on("py-jax@0.4.13:", type="run")
     depends_on("py-jaxtyping@0.2.20:", type="run")

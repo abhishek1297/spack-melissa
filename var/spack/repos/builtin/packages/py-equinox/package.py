@@ -22,23 +22,23 @@
 from spack.package import *
 
 
-class PyEquinox(PythonPackage, CudaPackage):
+class PyEquinox(PythonPackage):
     """FIXME: Put a proper description of your package here."""
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://www.example.com"
-    url = "https://files.pythonhosted.org/packages/20/2c/90dd8d90acae15cab7ad344398030a0ba6a1cb1257d5e7da57f41e566940/equinox-0.11.11-py3-none-any.whl"
+    url = "https://files.pythonhosted.org/packages/a8/48/b87be28baca98c5eeaa8b51b6d8d9064b0e51628533717912d49db5cdf60/equinox-0.11.3-py3-none-any.whl"
 
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
-    maintainers("patrick-kedger")
+    # maintainers("github_user1", "github_user2")
 
     # FIXME: Add the SPDX identifier of the project's license below.
     # See https://spdx.org/licenses/ for a list. Upon manually verifying
     # the license, set checked_by to your Github username.
     license("UNKNOWN", checked_by="github_user1")
 
-    version("0.11.11", sha256="49e9674f9bff0cde7ebcfbf2cdf4585c9231eb377eda31168bbf6467f88241e5")
+    version("0.11.3", sha256="04cf3faaf2b977ff1f7f89b7bf69c4e825d084c0bf59c6ccc19adba320d4b4a1")
 
     # FIXME: Only add the python/pip/wheel dependencies if you need specific versions
     # or need to change the dependency type. Generic python/pip/wheel dependencies are
@@ -50,11 +50,10 @@ class PyEquinox(PythonPackage, CudaPackage):
 
     # FIXME: Add additional dependencies if required.
     for arch in CudaPackage.cuda_arch_values:
-        cuda_specs = f"cuda_arch={arch}"
-        depends_on(f"py-jaxlib +cuda {cuda_specs}", type="run", when=f"{cuda_specs}")
+        cuda_specs = f" +cuda cuda_arch={arch}"
+        depends_on(f"py-jaxlib@0.4.13: {cuda_specs}", type="run", when=f"{cuda_specs}")
 
-    depends_on("py-jax@0.4.38:", type="run")
+    depends_on("py-jax@0.4.13:", type="run")
     depends_on("py-jaxtyping@0.2.20:", type="run")
     depends_on("py-typing-extensions@4.5.0:", type="run")
     depends_on("py-wadler-lindig@0.1.0:", type=("run"))
-
