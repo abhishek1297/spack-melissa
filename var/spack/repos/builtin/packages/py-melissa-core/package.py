@@ -79,7 +79,7 @@ class PyMelissaCore(PythonPackage, CudaPackage):
             depends_on(f"py-tensorflow@2.8.0:2 {cuda_specs}", type="run", when=f"+tf {cuda_specs}")
         else:
             conflicts(
-                "+cuda cuda_arch={arch}",
+                f"+cuda cuda_arch={arch}",
                 msg="Support beyond Ampere GPUs has not been tested yet. "
                 "Accepted values are between 60 and 80 inclusive."
             )
