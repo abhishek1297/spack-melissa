@@ -65,11 +65,6 @@ class PyMelissaCore(PythonPackage, CudaPackage):
     # ==============================
     #       CUDA dependencies
     # ==============================
-    conflicts(
-        "+tf +torch +cuda",
-        msg="TensorFlow and PyTorch cannot both be enabled with CUDA due to compatibility issues. "
-        "Try to disable one of them."
-    )
     for arch in CudaPackage.cuda_arch_values:
         # Support beyond ampere (A100) GPUs hasn't been tested yet.
         if arch.isdigit() and 60 <= int(arch) <= 80:
