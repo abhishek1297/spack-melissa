@@ -28,7 +28,7 @@ class PyMelissaCore(PythonPackage, CudaPackage):
         "torch", default=False, description="Install Deep Learning requirements with Pytorch only"
     )
     variant(
-        "tf", default=False, description="Install Deep Learning requirements with TensorFlow only"
+        "tf", default=True, description="Install Deep Learning requirements with TensorFlow only"
     )
     variant(
         "cuda", default=False,
@@ -55,17 +55,18 @@ class PyMelissaCore(PythonPackage, CudaPackage):
     depends_on("py-tensorboard@2.10.0:2", type="run")
     depends_on("py-matplotlib", type="run")
     depends_on("py-pandas", type="run")
-    # when both frameworks are not being used
-    # in that case install minimal tensorflow
-    # for the purposes of using its tensorboard summarwriter
-    depends_on(
-        "py-tensorflow@2.8.0:2~cuda~mkl~mpi",
-        type="run",
-        when="~tf ~torch"
+
+    # by default, install tensorflow
+    depends_on("py-tensorflow@2.8.0:2 ~cuda", type="run", when="+tf ~cuda")
+    # prevent tensorflow when jax cuda is used
+    # TODO: remove in the future
+    conflicts(
+        "+tf",
+        when="^py-jaxlib+cuda",
+        msg="TensorFlow cannot be installed with JAX+CUDA due to compatibility issues. Try PyTorch variant instead."
     )
 
-    depends_on("py-torch@1.12.1:2", type="run", when="+torch ~cuda")
-    depends_on("py-tensorflow@2.8.0:2", type="run", when="+tf ~cuda")
+    depends_on("py-torch@1.12.1:2 ~cuda", type="run", when="+torch ~cuda")
 
     # ==============================
     #       CUDA dependencies
