@@ -29,7 +29,8 @@ class PyMelissaCore(PythonPackage, CudaPackage):
         "torch", default=False, description="Install Deep Learning requirements with Pytorch only"
     )
     variant(
-        "tf", default=True, description="Install Deep Learning requirements with TensorFlow only"
+        "tf", default=True, when="~torch",
+        description="Install Deep Learning requirements with TensorFlow only"
     )
     variant(
         "cuda", default=False,
@@ -53,24 +54,29 @@ class PyMelissaCore(PythonPackage, CudaPackage):
     # ==============================
     #       DL dependencies
     # ==============================
-    depends_on("py-tensorboard@2.10.0:2", type="run")
-    depends_on("py-matplotlib", type="run")
-    depends_on("py-pandas", type="run")
+    for framework in ["+tf", "+torch"]:
+        depends_on("py-tensorboard@2.10.0:2", type="run", when=framework)
+        depends_on("py-matplotlib", type="run", when=framework)
+        depends_on("py-pandas", type="run", when=framework)
 
     # by default, install tensorflow
+    # WARNING: Tensorflow may require a compiler support with AVX512-VNNI to succeed.
     depends_on("py-tensorflow@2.8.0:2 ~cuda", type="run", when="+tf ~cuda")
     depends_on("py-torch@1.12.1:2 ~cuda", type="run", when="+torch ~cuda")
 
     # ==============================
     #       CUDA dependencies
     # ==============================
-    conflicts(
-        "+tf +torch +cuda",
-        msg="TensorFlow and PyTorch cannot both be enabled with CUDA due to compatibility issues. "
-        "Try to disable one of them."
-    )
     for arch in CudaPackage.cuda_arch_values:
-        cuda_specs = f"+cuda cuda_arch={arch}"
-        depends_on(f"nccl {cuda_specs}", when=cuda_specs)
-        depends_on(f"py-torch@1.12.1:2 {cuda_specs}", type="run", when=f"+torch {cuda_specs}")
-        depends_on(f"py-tensorflow@2.8.0:2 {cuda_specs}", type="run", when=f"+tf {cuda_specs}")
+        # Support beyond ampere (A100) GPUs hasn't been tested yet.
+        if arch.isdigit() and 60 <= int(arch) <= 80:
+            cuda_specs = f"+cuda cuda_arch={arch}"
+            depends_on(f"nccl {cuda_specs}", when=cuda_specs)
+            depends_on(f"py-torch@1.12.1:2 {cuda_specs}", type="run", when=f"+torch {cuda_specs}")
+            depends_on(f"py-tensorflow@2.8.0:2 {cuda_specs}", type="run", when=f"+tf {cuda_specs}")
+        else:
+            conflicts(
+                f"+cuda cuda_arch={arch}",
+                msg="Support beyond Ampere GPUs has not been tested yet. "
+                "Accepted values are between 60 and 80 inclusive."
+            )
