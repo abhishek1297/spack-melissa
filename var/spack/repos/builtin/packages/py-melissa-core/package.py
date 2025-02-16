@@ -60,6 +60,7 @@ class PyMelissaCore(PythonPackage, CudaPackage):
         depends_on("py-pandas", type="run", when=framework)
 
     # by default, install tensorflow
+    # WARNING: Tensorflow may require a compiler support with AVX512-VNNI to succeed.
     depends_on("py-tensorflow@2.8.0:2 ~cuda", type="run", when="+tf ~cuda")
     depends_on("py-torch@1.12.1:2 ~cuda", type="run", when="+torch ~cuda")
 
