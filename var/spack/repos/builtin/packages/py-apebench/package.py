@@ -62,7 +62,8 @@ class PyApebench(PythonPackage, CudaPackage):
     depends_on("py-seaborn@0.13.0:", type="run")
     depends_on("py-optax@0.2.0:", type="run")
     # specific to apebench
-    depends_on("py-equinox@0.11.3:", type="run")
-    depends_on("py-exponax@0.1.0", type="run")
-    depends_on("py-pdequinox@0.1.2", type="run")
-    depends_on("py-trainax@0.0.2", type="run")
+    for c in ["~cuda", "+cuda"]:
+        depends_on(f"py-equinox@0.11.3 {c}", type="run", when=c)
+        depends_on(f"py-exponax@0.1.0 {c}", type="run", when=c)
+        depends_on(f"py-pdequinox@0.1.2 {c}", type="run", when=c)
+        depends_on(f"py-trainax@0.0.2 {c}", type="run", when=c)
