@@ -55,12 +55,20 @@ class PyMelissaCore(PythonPackage, CudaPackage):
     #       DL dependencies
     # ==============================
     for framework in ["+tf", "+torch"]:
+        conflicts(
+            "%gcc@:9",
+            when=framework,
+            msg=f"GCC must be greater than version 9 when using {framework}"
+        )
         depends_on("py-tensorboard@2.10.0:2", type="run", when=framework)
         depends_on("py-matplotlib", type="run", when=framework)
         depends_on("py-pandas", type="run", when=framework)
+        # WARNING: If using a gcc compiler, then support with AVX512-VNNI is expected for bazel source builds.
+        # The instruction set comes with binutils. If you are installing a gcc through spack then
+        # Then do spack install `gcc+binutils`
+        depends_on("binutils@2.29:", type="build", when=f"{framework} %gcc")
 
     # by default, install tensorflow
-    # WARNING: Tensorflow may require a compiler support with AVX512-VNNI to succeed.
     depends_on("py-tensorflow@2.8.0:2 ~cuda", type="run", when="+tf ~cuda")
     depends_on("py-torch@1.12.1:2 ~cuda", type="run", when="+torch ~cuda")
 
@@ -69,6 +77,7 @@ class PyMelissaCore(PythonPackage, CudaPackage):
     # ==============================
     for arch in CudaPackage.cuda_arch_values:
         # Support beyond ampere (A100) GPUs hasn't been tested yet.
+        # FIXME: free to modify and test
         if arch.isdigit() and 60 <= int(arch) <= 80:
             cuda_specs = f"+cuda cuda_arch={arch}"
             depends_on(f"nccl {cuda_specs}", when=cuda_specs)
