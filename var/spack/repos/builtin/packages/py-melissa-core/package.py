@@ -68,9 +68,12 @@ class PyMelissaCore(PythonPackage, CudaPackage):
         # Then do spack install `gcc+binutils`
         depends_on("binutils@2.29:", type="build", when=f"{framework} %gcc")
 
-    # by default, install tensorflow
-    depends_on("py-tensorflow@2.8.0:2 ~cuda", type="run", when="+tf ~cuda")
-    depends_on("py-torch@1.12.1:2 ~cuda", type="run", when="+torch ~cuda")
+
+    # WARNING: do not change the upper limit for tensorflow beyond 2.17, which requires AVX-VNNI-INT8 support.
+    # Check cpu flags to ensure if avxvnniint8 is available on your machine, if you want to increase the upper limit.
+    depends_on("py-tensorflow@2.8.0:2.17 ~cuda", type="run", when="+tf ~cuda")
+    depends_on("py-torch@1.12.1:2.6 ~cuda", type="run", when="+torch ~cuda")
+
 
     # ==============================
     #       CUDA dependencies
@@ -81,8 +84,8 @@ class PyMelissaCore(PythonPackage, CudaPackage):
         if arch.isdigit() and 60 <= int(arch) <= 80:
             cuda_specs = f"+cuda cuda_arch={arch}"
             depends_on(f"nccl {cuda_specs}", when=cuda_specs)
-            depends_on(f"py-torch@1.12.1:2 {cuda_specs}", type="run", when=f"+torch {cuda_specs}")
-            depends_on(f"py-tensorflow@2.8.0:2 {cuda_specs}", type="run", when=f"+tf {cuda_specs}")
+            depends_on(f"py-tensorflow@2.8.0:2.17 {cuda_specs}", type="run", when=f"+tf {cuda_specs}")
+            depends_on(f"py-torch@1.12.1:2.6 {cuda_specs}", type="run", when=f"+torch {cuda_specs}")
         else:
             conflicts(
                 f"+cuda cuda_arch={arch}",
