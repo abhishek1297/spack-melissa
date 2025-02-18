@@ -50,8 +50,13 @@ class PyApebench(PythonPackage, CudaPackage):
 
     # FIXME: Add additional dependencies if required.
     for arch in CudaPackage.cuda_arch_values:
-        cuda_specs = f"cuda_arch={arch}"
-        depends_on(f"py-jaxlib +cuda {cuda_specs}", type="run", when=f"{cuda_specs}")
+        cuda_specs = f"+cuda cuda_arch={arch}"
+        with when(cuda_specs):
+            depends_on(f"py-jaxlib {cuda_specs}", type="run")
+            depends_on(f"py-equinox@0.11.3 {cuda_specs}", type="run")
+            depends_on(f"py-exponax@0.1.0 {cuda_specs}", type="run")
+            depends_on(f"py-pdequinox@0.1.2 {cuda_specs}", type="run")
+            depends_on(f"py-trainax@0.0.2 {cuda_specs}", type="run")
 
     depends_on("py-jax@0.4.13:", type="run")
     depends_on("py-jaxtyping@0.2.20:", type="run")
@@ -61,12 +66,12 @@ class PyApebench(PythonPackage, CudaPackage):
     depends_on("py-pandas@2.2.0:", type="run")
     depends_on("py-seaborn@0.13.0:", type="run")
     depends_on("py-optax@0.2.0:", type="run")
-    # specific to apebench
-    for c in ["~cuda", "+cuda"]:
-        depends_on(f"py-equinox@0.11.3 {c}", type="run", when=c)
-        depends_on(f"py-exponax@0.1.0 {c}", type="run", when=c)
-        depends_on(f"py-pdequinox@0.1.2 {c}", type="run", when=c)
-        depends_on(f"py-trainax@0.0.2 {c}", type="run", when=c)
+
+    with when("~cuda"):
+        depends_on(f"py-equinox@0.11.3", type="run")
+        depends_on(f"py-exponax@0.1.0", type="run")
+        depends_on(f"py-pdequinox@0.1.2", type="run")
+        depends_on(f"py-trainax@0.0.2", type="run")
 
     def setup_run_environment(self, env):
         if "+cuda" in self.spec:
