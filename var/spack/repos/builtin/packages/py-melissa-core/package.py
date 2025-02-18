@@ -83,7 +83,7 @@ class PyMelissaCore(PythonPackage, CudaPackage):
         # FIXME: free to modify and test
         if arch.isdigit() and 60 <= int(arch) <= 80:
             cuda_specs = f"+cuda cuda_arch={arch}"
-            depends_on(f"nccl {cuda_specs}", when=cuda_specs)
+            depends_on(f"nccl {cuda_specs}", when=cuda_specs)  # it is set by default
             depends_on(f"py-tensorflow@2.8.0:2.17 {cuda_specs}", type="run", when=f"+tf {cuda_specs}")
             depends_on(f"py-torch@1.12.1:2.6 {cuda_specs}", type="run", when=f"+torch {cuda_specs}")
         else:
