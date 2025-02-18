@@ -67,3 +67,10 @@ class PyApebench(PythonPackage, CudaPackage):
         depends_on(f"py-exponax@0.1.0 {c}", type="run", when=c)
         depends_on(f"py-pdequinox@0.1.2 {c}", type="run", when=c)
         depends_on(f"py-trainax@0.0.2 {c}", type="run", when=c)
+
+    def setup_run_environment(self, env):
+        if "+cuda" in self.spec:
+            cuda_home = self.spec["cuda"].prefix
+            # This is an irrelevant lib path and it is purely used by NVIDIA profilers.
+            # But, since JAX throws RuntimeError on it, we set this path.
+            env.prepend_path("LD_LIBRARY_PATH", f"{cuda_home}/extras/CUPTI/lib64")
