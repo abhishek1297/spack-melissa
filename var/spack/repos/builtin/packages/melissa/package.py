@@ -26,3 +26,10 @@ class Melissa(CMakePackage):
     depends_on("libzmq@4.2:4", type=("build", "run"))
     depends_on("python@3.9:3.12", type=("build", "run"))
     depends_on("mpi", type=("build", "run"))
+
+    def setup_run_environment(self, env):
+        python = self.spec["python"]
+        python_version = python.version.up_to(2)
+        # This path points to the python client API scripts installed in $CMAKE_INSTALL_PREFIX/lib
+        melissa_api_site_packages = f"{self.prefix.lib}/python{python_version}/site-packages"
+        env.prepend_path("PYTHONPATH", melissa_api_site_packages)

@@ -28,11 +28,15 @@ class PyMelissaCore(PythonPackage, CudaPackage):
         "torch", default=False, description="Install Deep Learning requirements with Pytorch only"
     )
     variant(
-        "tf", default=False, description="Install Deep Learning requirements with TensorFlow only"
+        "tf",
+        default=True,
+        when="~torch",
+        description="Install Deep Learning requirements with TensorFlow only",
     )
     variant(
-        "cuda", default=False,
-        description="Install cuda and cudnn for the specified deep learning framework."
+        "cuda",
+        default=False,
+        description="Install cuda and cudnn for the specified deep learning framework.",
     )
     # ==============================
     #       Base dependencies
@@ -52,21 +56,46 @@ class PyMelissaCore(PythonPackage, CudaPackage):
     # ==============================
     #       DL dependencies
     # ==============================
-    depends_on("py-tensorboard@2.10.0:2", type="run", when="+torch")
-    depends_on("py-tensorboard@2.10.0:2", type="run", when="+tf")
-    depends_on("py-matplotlib", type="run", when="+torch")
-    depends_on("py-matplotlib", type="run", when="+tf")
-    depends_on("py-pandas", type="run", when="+torch")
-    depends_on("py-pandas", type="run", when="+tf")
+    for framework in ["+tf", "+torch"]:
+        conflicts(
+            "%gcc@:9",
+            when=framework,
+            msg=f"GCC must be greater than version 9 when using {framework}",
+        )
+        depends_on("py-tensorboard@2.10.0:2", type="run", when=framework)
+        depends_on("py-matplotlib", type="run", when=framework)
+        depends_on("py-pandas", type="run", when=framework)
+        # WARNING: If using a gcc compiler, then support with AVX512-VNNI is
+        # expected for bazel source builds.
+        # The instruction set comes with binutils. If you are installing a gcc
+        # through spack then do spack install `gcc+binutils`
+        depends_on("binutils@2.29:", type="build", when=f"{framework} %gcc")
 
-    depends_on("py-torch@1.12.1:2", type="run", when="+torch")
-    depends_on("py-tensorflow@2.8.0:2", type="run", when="+tf")
-    
+    # WARNING: do not change the upper limit for tensorflow beyond 2.17, which requires
+    # AVX-VNNI-INT8 support.
+    # Check cpu flags to ensure if avxvnniint8 is available on your machine,
+    # if you want to increase the upper limit.
+    depends_on("py-tensorflow@2.8.0:2.17 ~cuda", type="run", when="+tf ~cuda")
+    depends_on("py-torch@1.12.1:2.6 ~cuda", type="run", when="+torch ~cuda")
+
     # ==============================
     #       CUDA dependencies
     # ==============================
     for arch in CudaPackage.cuda_arch_values:
-        cuda_specs = f"+cuda cuda_arch={arch}"
-        depends_on(f"nccl {cuda_specs}", when=cuda_specs)
-        depends_on(f"py-torch@1.12.1:2 {cuda_specs}", type="run", when=f"+torch {cuda_specs}")
-        depends_on(f"py-tensorflow@2.8.0:2 {cuda_specs}", type="run", when=f"+tf {cuda_specs}")
+        # Support beyond ampere (A100) GPUs hasn't been tested yet.
+        # FIXME: free to modify and test
+        if arch.isdigit() and 60 <= int(arch) <= 80:
+            cuda_specs = f"+cuda cuda_arch={arch}"
+            depends_on(f"nccl {cuda_specs}", when=cuda_specs)  # it is set by default
+            depends_on(
+                f"py-tensorflow@2.8.0:2.17 {cuda_specs}", type="run", when=f"+tf {cuda_specs}"
+            )
+            depends_on(
+                f"py-torch@1.12.1:2.6 {cuda_specs}", type="run", when=f"+torch {cuda_specs}"
+            )
+        else:
+            conflicts(
+                f"+cuda cuda_arch={arch}",
+                msg="Support beyond Ampere GPUs has not been tested yet. "
+                "Accepted values are between 60 and 80 inclusive.",
+            )
