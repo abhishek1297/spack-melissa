@@ -18,7 +18,7 @@ class MelissaApi(CMakePackage):
 
     license("BSD-3-Clause")
 
-    version("develop", branch="develop", deperecated=True)
+    version("develop", branch="develop", deprecated=True)
 
     depends_on("c", type="build")  # generated
     depends_on("fortran", type="build")  # generated
