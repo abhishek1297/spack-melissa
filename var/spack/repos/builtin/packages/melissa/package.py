@@ -16,6 +16,16 @@ class Melissa(CMakePackage):
     maintainers("abhishekp1297", "viperML", "raffino")
 
     version("develop", branch="develop", preferred=True)
+    version(
+        "0.7.1",
+        sha256="c30584f15fecf6297712a88e4d28851bfd992f31209fd7bb8af2feebe73d539d",
+        deprecated=True,
+    )
+    version(
+        "0.7.0",
+        sha256="a801d0b512e31a0750f98cfca80f8338985e06abf9b26e96f7645a022864e41c",
+        deprecated=True,
+    )
 
     depends_on("c", type="build")  # generated
     depends_on("fortran", type="build")  # generated
