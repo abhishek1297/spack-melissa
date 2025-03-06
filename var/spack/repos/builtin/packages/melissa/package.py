@@ -12,6 +12,7 @@ class Melissa(CMakePackage):
 
     homepage = "https://gitlab.inria.fr/melissa/melissa"
     git = "https://gitlab.inria.fr/melissa/melissa.git"
+    url = "https://gitlab.inria.fr/melissa/melissa.git"
     # attention: Git**Hub**.com accounts
     maintainers("abhishekp1297", "viperML", "raffino")
 

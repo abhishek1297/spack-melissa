@@ -14,6 +14,7 @@ class PyMelissaCore(PythonPackage, CudaPackage):
 
     homepage = "https://gitlab.inria.fr/melissa/melissa"
     git = "https://gitlab.inria.fr/melissa/melissa.git"
+    url = "https://gitlab.inria.fr/melissa/melissa.git"
     maintainers("abhishekp1297", "viperML", "raffino")
 
     license("BSD-3-Clause")
