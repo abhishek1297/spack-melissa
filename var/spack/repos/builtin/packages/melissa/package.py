@@ -12,7 +12,9 @@ class Melissa(CMakePackage):
 
     homepage = "https://gitlab.inria.fr/melissa/melissa"
     git = "https://gitlab.inria.fr/melissa/melissa.git"
-    url = "https://gitlab.inria.fr/melissa/melissa.git"
+
+    # FIXME: Replace with an official link
+    url = "https://gitlab.inria.fr/melissa/melissa/-/archive/ac-develop-stable/melissa-ac-develop-stable.tar.gz"
     # attention: Git**Hub**.com accounts
     maintainers("abhishekp1297", "viperML", "raffino")
 

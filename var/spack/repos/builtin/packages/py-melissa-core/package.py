@@ -14,7 +14,8 @@ class PyMelissaCore(PythonPackage, CudaPackage):
 
     homepage = "https://gitlab.inria.fr/melissa/melissa"
     git = "https://gitlab.inria.fr/melissa/melissa.git"
-    url = "https://gitlab.inria.fr/melissa/melissa.git"
+    # FIXME: Replace with an official link
+    url = "https://gitlab.inria.fr/melissa/melissa/-/archive/ac-develop-stable/melissa-ac-develop-stable.tar.gz"
     maintainers("abhishekp1297", "viperML", "raffino")
 
     license("BSD-3-Clause")
