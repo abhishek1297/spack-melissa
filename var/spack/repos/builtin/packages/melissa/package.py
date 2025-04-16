@@ -19,6 +19,7 @@ class Melissa(CMakePackage):
     maintainers("abhishekp1297", "viperML", "raffino")
 
     version("develop", branch="develop", preferred=True)
+    version("acdevelop", branch="active-sampling-develop", preferred=True)
     version(
         "0.7.1",
         sha256="c30584f15fecf6297712a88e4d28851bfd992f31209fd7bb8af2feebe73d539d",

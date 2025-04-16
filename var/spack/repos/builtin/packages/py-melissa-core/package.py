@@ -21,6 +21,7 @@ class PyMelissaCore(PythonPackage, CudaPackage):
     license("BSD-3-Clause")
 
     version("develop", branch="develop", preferred=True)
+    version("acdevelop", branch="active-sampling-develop", preferred=True)
     version(
         "joss", tag="JOSS_v2", commit="20bbe68c1a7b73aa2ea3ad35681c332c7a5fc516", deprecated=True
     )
