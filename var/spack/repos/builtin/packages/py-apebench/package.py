@@ -68,7 +68,7 @@ class PyApebench(PythonPackage, CudaPackage):
     depends_on("py-optax@0.2.0:", type="run")
 
     with when("~cuda"):
-        depends_on(f"py-equinox@0.11.3", type="run")
+        depends_on(f"py-equinox@0.11.3:", type="run")
         depends_on(f"py-exponax@0.1.0", type="run")
         depends_on(f"py-pdequinox@0.1.2", type="run")
         depends_on(f"py-trainax@0.0.2", type="run")

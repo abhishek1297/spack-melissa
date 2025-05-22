@@ -350,7 +350,7 @@ def _ensure_no_folders_without_package_py(error_cls):
     for repository in spack.repo.PATH.repos:
         missing = []
         for entry in os.scandir(repository.packages_path):
-            if not entry.is_dir():
+            if not entry.is_dir() or entry.name == "__pycache__":
                 continue
             package_py = pathlib.Path(entry.path) / spack.repo.package_file_name
             if not package_py.exists():
@@ -1010,7 +1010,7 @@ def _issues_in_depends_on_directive(pkgs, error_cls):
             for dep_name, dep in deps_by_name.items():
 
                 def check_virtual_with_variants(spec, msg):
-                    if not spec.virtual or not spec.variants:
+                    if not spack.repo.PATH.is_virtual(spec.name) or not spec.variants:
                         return
                     error = error_cls(
                         f"{pkg_name}: {msg}",

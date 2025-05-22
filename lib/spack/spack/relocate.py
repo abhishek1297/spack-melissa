@@ -8,8 +8,8 @@ import re
 import sys
 from typing import Dict, Iterable, List, Optional
 
-import macholib.mach_o
-import macholib.MachO
+import _vendoring.macholib.mach_o
+import _vendoring.macholib.MachO
 
 import llnl.util.filesystem as fs
 import llnl.util.lang
@@ -132,7 +132,7 @@ def _macholib_get_paths(cur_path):
     """Get rpaths, dependent libraries, and library id of mach-o objects."""
     headers = []
     try:
-        headers = macholib.MachO.MachO(cur_path).headers
+        headers = _vendoring.macholib.MachO.MachO(cur_path).headers
     except ValueError:
         pass
     if not headers:
@@ -147,9 +147,9 @@ def _macholib_get_paths(cur_path):
             tty.warn("File is a stub, not a full library: {0}".format(cur_path))
         commands = headers[-1].commands
 
-    LC_ID_DYLIB = macholib.mach_o.LC_ID_DYLIB
-    LC_LOAD_DYLIB = macholib.mach_o.LC_LOAD_DYLIB
-    LC_RPATH = macholib.mach_o.LC_RPATH
+    LC_ID_DYLIB = _vendoring.macholib.mach_o.LC_ID_DYLIB
+    LC_LOAD_DYLIB = _vendoring.macholib.mach_o.LC_LOAD_DYLIB
+    LC_RPATH = _vendoring.macholib.mach_o.LC_RPATH
 
     ident = None
     rpaths = []
@@ -283,21 +283,21 @@ def relocate_text_bin(binaries: Iterable[str], prefix_to_prefix: PrefixToPrefix)
 def is_macho_magic(magic: bytes) -> bool:
     return (
         # In order of popularity: 64-bit mach-o le/be, 32-bit mach-o le/be.
-        magic.startswith(b"\xCF\xFA\xED\xFE")
-        or magic.startswith(b"\xFE\xED\xFA\xCF")
-        or magic.startswith(b"\xCE\xFA\xED\xFE")
-        or magic.startswith(b"\xFE\xED\xFA\xCE")
+        magic.startswith(b"\xcf\xfa\xed\xfe")
+        or magic.startswith(b"\xfe\xed\xfa\xcf")
+        or magic.startswith(b"\xce\xfa\xed\xfe")
+        or magic.startswith(b"\xfe\xed\xfa\xce")
         # universal binaries: 0xcafebabe be (most common?) or 0xbebafeca le (not sure if exists).
         # Here we need to disambiguate mach-o and JVM class files. In mach-o the next 4 bytes are
         # the number of binaries; in JVM class files it's the java version number. We assume there
         # are less than 10 binaries in a universal binary.
-        or (magic.startswith(b"\xCA\xFE\xBA\xBE") and int.from_bytes(magic[4:8], "big") < 10)
-        or (magic.startswith(b"\xBE\xBA\xFE\xCA") and int.from_bytes(magic[4:8], "little") < 10)
+        or (magic.startswith(b"\xca\xfe\xba\xbe") and int.from_bytes(magic[4:8], "big") < 10)
+        or (magic.startswith(b"\xbe\xba\xfe\xca") and int.from_bytes(magic[4:8], "little") < 10)
     )
 
 
 def is_elf_magic(magic: bytes) -> bool:
-    return magic.startswith(b"\x7FELF")
+    return magic.startswith(b"\x7fELF")
 
 
 def is_binary(filename: str) -> bool:
@@ -406,8 +406,8 @@ def fixup_macos_rpaths(spec):
     entries which makes it harder to adjust with ``install_name_tool
     -delete_rpath``.
     """
-    if spec.external or spec.virtual:
-        tty.warn("external or virtual package cannot be fixed up: {0!s}".format(spec))
+    if spec.external or not spec.concrete:
+        tty.warn("external/abstract spec cannot be fixed up: {0!s}".format(spec))
         return False
 
     if "platform=darwin" not in spec:

@@ -27,7 +27,7 @@ class PyEquinox(PythonPackage, CudaPackage):
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://www.example.com"
-    url = "https://files.pythonhosted.org/packages/a8/48/b87be28baca98c5eeaa8b51b6d8d9064b0e51628533717912d49db5cdf60/equinox-0.11.3-py3-none-any.whl"
+    url = "https://files.pythonhosted.org/packages/4f/ec/083aecd364f7b85ae724ffe8ea5b4e23b6003b1f119179cbd1c586875586/equinox-0.11.12-py3-none-any.whl"
 
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
@@ -37,7 +37,7 @@ class PyEquinox(PythonPackage, CudaPackage):
     # See https://spdx.org/licenses/ for a list. Upon manually verifying
     # the license, set checked_by to your Github username.
     license("UNKNOWN", checked_by="github_user1")
-
+    version("0.11.12", sha256="63f7c910b037f9abb2b8942ab4ac1720d465c275b70e95dc42dd57080a0e1757")
     version("0.11.3", sha256="04cf3faaf2b977ff1f7f89b7bf69c4e825d084c0bf59c6ccc19adba320d4b4a1")
 
     # FIXME: Only add the python/pip/wheel dependencies if you need specific versions
@@ -53,7 +53,7 @@ class PyEquinox(PythonPackage, CudaPackage):
         cuda_specs = f" +cuda cuda_arch={arch}"
         depends_on(f"py-jaxlib@0.4.13: {cuda_specs}", type="run", when=f"{cuda_specs}")
 
-    depends_on("py-jax@0.4.13:", type="run")
+    depends_on("py-jax@0.4.38:", type="run")
     depends_on("py-jaxtyping@0.2.20:", type="run")
     depends_on("py-typing-extensions@4.5.0:", type="run")
     depends_on("py-wadler-lindig@0.1.0:", type=("run"))
