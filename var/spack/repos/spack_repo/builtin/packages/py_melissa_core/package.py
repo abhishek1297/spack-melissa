@@ -31,9 +31,6 @@ class PyMelissaCore(PythonPackage, CudaPackage):
     )
     version("sc23", tag="SC23", commit="8bb5b6817d4abe4eaa5893552d711150e53535f3", deprecated=True)
 
-    depends_on("c", type="build")  # generated
-    depends_on("fortran", type="build")  # generated
-
     # define variants for the deep learning server (torch, tf)
     variant(
         "torch", default=False, description="Install Deep Learning requirements with Pytorch only"
@@ -44,6 +41,10 @@ class PyMelissaCore(PythonPackage, CudaPackage):
         when="~torch",
         description="Install Deep Learning requirements with TensorFlow only",
     )
+
+    depends_on("c", type="build")  # generated
+    depends_on("fortran", type="build")  # generated
+
     # ==============================
     #       Base dependencies
     # ==============================

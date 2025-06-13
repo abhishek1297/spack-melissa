@@ -46,6 +46,8 @@ class PyApebench(PythonPackage, CudaPackage):
     # FIXME: Only add the python/pip/wheel dependencies if you need specific versions
     # or need to change the dependency type. Generic python/pip/wheel dependencies are
     # added implicity by the PythonPackage base class.
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
     depends_on("python@3.10:3.12", type=("build", "run"))
 
     # FIXME: Add a build backend, usually defined in pyproject.toml. If no such file
@@ -56,12 +58,12 @@ class PyApebench(PythonPackage, CudaPackage):
         cuda_specs = f"+cuda cuda_arch={arch}"
         with when(cuda_specs):
             depends_on(f"py-jaxlib {cuda_specs}", type="run")
-            depends_on(f"py-equinox@0.11.3 {cuda_specs}", type="run")
+            depends_on(f"py-equinox@0.11.12 {cuda_specs}", type="run")
             depends_on(f"py-exponax@0.1.0 {cuda_specs}", type="run")
             depends_on(f"py-pdequinox@0.1.2 {cuda_specs}", type="run")
             depends_on(f"py-trainax@0.0.2 {cuda_specs}", type="run")
 
-    depends_on("py-jax@0.4.13:", type="run")
+    depends_on("py-jax@0.4.13:0.4", type="run")
     depends_on("py-jaxtyping@0.2.20:", type="run")
     depends_on("py-typing-extensions@4.5.0:", type="run")
     depends_on("py-tqdm@4.63.2:", type="run")
